@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech Detection</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            font-size: 22.5px;
+        }
+
+        body{
+            background-color: aquamarine;
+        }
+        
+        h1{
+            text-align: center;
+            font-style: "Arial";
+            font-size: 60px;
+            margin-top: 100px;
+        }
+        .words{
+            max-width: 600px;
+            background-color: #fff; 
+            background-image: 
+            linear-gradient(90deg, transparent 28px, #abced4 28px, #abced4 30px, transparent 30px),
+            linear-gradient(90deg, transparent 24px, #abced4 24px, #abced4 26px, transparent 26px),
+            linear-gradient(#eee .1em, transparent .1em);
+            background-size: 100% 1.6em;
+            margin: 50px auto;
+            padding: 0.6rem;
+            padding-top: 0.5rem;
+            padding-left: 45px;
+            border-radius: 5px;
+            line-height: 1.61rem;
+            
+        }
+
+        p{
+            margin: 0 0 0 1rem;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <h1>NOTES</h1>
+    
+    <div class="words" contenteditable="true" name="text">
+        
+    </div>
+
+    <script>
+        const recognision = new webkitSpeechRecognition();
+        recognision.interimResults = true;
+
+        let p = document.createElement('p');
+        const words = document.querySelector('.words');
+        words.appendChild(p);
+
+        recognision.addEventListener('result', function(e){
+            const transcript = Array.from(e.results)
+            .map(result => result[0])
+            .map(result => result.transcript)
+            .join('');
+
+            p.textContent = transcript;
+
+            if(e.results[0].isFinal){
+                p = document.createElement('p');
+                let br = document.createElement('br');
+                words.appendChild(br);
+                words.appendChild(p);
+            }
+
+            // console.log(transcript);
+            // console.log(e.results[0]);
+
+        });
+
+        recognision.addEventListener('end', recognision.start);
+
+        recognision.start();
+    </script>
+</body>
+</html>
